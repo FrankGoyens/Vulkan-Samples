@@ -299,8 +299,14 @@ inline Instance<bindingType>::Instance(std::string const                        
 		                            available_layer_instance_extensions.end());
 	}
 
+	bool portability = false;
+
 	for (auto const &requested_extension : requested_extensions)
 	{
+		if (requested_extension.first == VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME){
+			portability = true;
+			continue;
+		}
 		if (!enable_extension(requested_extension.first, available_extensions, enabled_extensions))
 		{
 			if (requested_extension.second == vkb::RequestMode::Optional)
@@ -329,6 +335,11 @@ inline Instance<bindingType>::Instance(std::string const                        
 	                                   .ppEnabledLayerNames     = enabled_layers_cstr.data(),
 	                                   .enabledExtensionCount   = static_cast<uint32_t>(enabled_extensions_cstr.size()),
 	                                   .ppEnabledExtensionNames = enabled_extensions_cstr.data()};
+
+	
+	if(portability){
+		create_info.flags |= vk::InstanceCreateFlagBits::eEnumeratePortabilityKHR;		
+	}
 
 	// Create the Vulkan instance
 	handle = vk::createInstance(create_info);
