@@ -27,6 +27,8 @@
 #include "rendering/subpasses/lighting_subpass.h"
 #include "scene_graph/node.h"
 
+#include "voxloader.h"
+
 Subpasses::Subpasses()
 {
 	auto &config = get_configuration();
@@ -127,6 +129,8 @@ bool Subpasses::prepare(const vkb::ApplicationOptions &options)
 
 	std::set<VkImageUsageFlagBits> usage = {VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT};
 	get_render_context().update_swapchain(usage);
+
+	voxloader::load_vox("afile");
 
 	load_scene("scenes/sponza/Sponza01.gltf");
 
